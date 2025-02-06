@@ -21,10 +21,10 @@ struct gc_header
 	size_t size;
 	int mark;
 };
-static_assert(sizeof(gc_header) % 8 == 0);
+static_assert(sizeof(gc_header) % 8 == 0, "");
+static_assert(sizeof(uintptr_t) == 8, "");
 
 #define OBJ_HEADER(obj_ptr) ((struct gc_header*)(obj_ptr) - 1)
-#define LIST_CONTAINS(list, elem) (std::find(std::begin(list), std::end(list), (elem)) != std::end(list))
 
 void gc_add_root(struct gc_state* gc, void* obj)
 {
@@ -49,7 +49,7 @@ void* gc_new(struct gc_state* gc, size_t size)
 
 	//*alloc = gc_header{};
 	alloc->size = size;
-	alloc->mark = 1;
+	alloc->mark = 0;
 
 	void* objPtr = (alloc + 1);
 	gc->objects.insert(objPtr);
@@ -75,7 +75,6 @@ void gc_mark_recursive(gc_state* gc, void* obj)
 	size_t size = OBJ_HEADER(obj)->size;
 	for (size_t i = 0; i < size / 8; i++)
 	{
-		//void* testPtr = ((uintptr_t*)root + i);
 		void* testPtr = ((uintptr_t**)obj)[i];
 
 		// TODO: The list contain check could be optimized if we knew the bounds of the gc heap.
@@ -86,12 +85,6 @@ void gc_mark_recursive(gc_state* gc, void* obj)
 
 void gc_collect(gc_state* gc)
 {
-	if (gc->objects.empty())
-		return;
-
-	for (void* obj : gc->objects)
-		OBJ_HEADER(obj)->mark = 0;
-
 	for (void* root : gc->roots)
 		gc_mark_recursive(gc, root);
 
@@ -99,6 +92,8 @@ void gc_collect(gc_state* gc)
 	{
 		if (!OBJ_HEADER(obj)->mark)
 			gc->toFree.push_back(obj);
+
+		OBJ_HEADER(obj)->mark = 0;
 	}
 
 	for (void* obj : gc->toFree)
