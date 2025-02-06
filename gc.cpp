@@ -21,8 +21,6 @@ struct gc_header
 	size_t size;
 	int mark;
 };
-static_assert(sizeof(gc_header) % 8 == 0, "");
-static_assert(sizeof(uintptr_t) == 8, "");
 
 #define OBJ_HEADER(obj_ptr) ((struct gc_header*)(obj_ptr) - 1)
 
@@ -43,7 +41,8 @@ size_t gc_get_object_count(gc_state* gc)
 
 void* gc_new(struct gc_state* gc, size_t size)
 {
-	size = (size + 7) & ~7;
+	//size = (size + 7) & ~7;
+	static_assert(sizeof(gc_header) % 8 == 0, "");
 	gc_header* alloc = (gc_header*)malloc(sizeof(gc_header) + size);
 	if (!alloc) return NULL;
 
@@ -73,6 +72,8 @@ void gc_mark_recursive(gc_state* gc, void* obj)
 {
 	OBJ_HEADER(obj)->mark = 1;
 	size_t size = OBJ_HEADER(obj)->size;
+	static_assert(sizeof(uintptr_t) == 8, "");
+
 	for (size_t i = 0; i < size / 8; i++)
 	{
 		void* testPtr = ((uintptr_t**)obj)[i];
