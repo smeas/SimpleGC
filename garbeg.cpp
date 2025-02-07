@@ -35,12 +35,16 @@ int main(int argc, char* argv[])
     gc_collect(gc); // 3 obj left
     assert(gc_get_object_count(gc) == 3);
 
-    // // STACK REF
-    // int* number = (int*)gc_new0(gc, sizeof(int));
-    // assert(gc_get_object_count(gc) == 4);
-    //
-    // gc_collect(gc);
-    // assert(gc_get_object_count(gc) == 4);
+    // STACK REF
+    int* number = (int*)gc_new0(gc, sizeof(int));
+    assert(gc_get_object_count(gc) == 4);
+
+    gc_collect(gc);
+    assert(gc_get_object_count(gc) == 4);
+
+    number = NULL;
+    gc_collect(gc);
+    assert(gc_get_object_count(gc) == 3);
 
     return 0;
 }
