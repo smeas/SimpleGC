@@ -22,6 +22,8 @@ struct gc_header
 	// 1. most significant bit stores the mark.
 	// 2. the rest of the value stores the size of the allocated object, excluding the header.
 	size_t value;
+	// FIXME: attempt to ret rid of padding.
+	char _pad[8]; // Padding to ensure 16 byte alignment for allocations. See gc_new.
 };
 
 constexpr size_t HI_BIT64 = (size_t)1 << 63;
@@ -60,6 +62,7 @@ void* gc_new(struct gc_state* gc, size_t size)
 	alloc->value = size;
 
 	void* objPtr = (alloc + 1);
+	assert((uintptr_t)objPtr % 16 == 0); // we want user object allocations to be 16 byte aligned to mimic malloc behaviour.
 	gc->objects.insert(objPtr);
 	return objPtr;
 }
