@@ -1,4 +1,4 @@
-## A simple conservative garbage collector implementation writtein in C-style C++.
+## A simple conservative garbage collector implementation written in C-style C++.
 
 ### Implemented Features
 - It will automatically detect GC pointers in globals, stack, and registers
