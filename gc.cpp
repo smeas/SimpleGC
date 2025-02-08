@@ -1,12 +1,9 @@
 #include "gc.h"
 
 #include <stdlib.h>
+#include <assert.h>
 #include <vector>
 #include <unordered_set>
-#include <algorithm>
-#include <assert.h>
-#include <mutex>
-#include <thread>
 #include <Windows.h>
 #include <intrin.h>
 

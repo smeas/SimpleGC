@@ -11,8 +11,8 @@
 
 #undef NDEBUG
 #include <assert.h>
-#include <cstdio>
 
+// Compiler hacks to ease feature testing.
 // See helpers.asm
 extern "C" void mov_to_r15(void*);
 extern "C" void noop(void*);
@@ -30,11 +30,7 @@ void clear_stack_above()
     int count = 64000;
     char* ptr = (char*)alloca(count);
     memset(ptr, 0xbb, count);
-    for (int i = 0; i < count; i++)
-    {
-        ptr[i] = 0xbb;
-        noop((void*)&ptr[i]);
-    }
+    noop(ptr);
 }
 
 struct top_obj
