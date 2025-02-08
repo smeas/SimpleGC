@@ -6,3 +6,5 @@ riderModule.iml
 x64/
 .idea/
 *.DotSettings.user
+.vs/
+*.vcxproj.user

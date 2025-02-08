@@ -18,5 +18,18 @@
     <ClCompile Include="garbeg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="fluff.asm">
+      <Filter>Source Files</Filter>
+    </MASM>
   </ItemGroup>
 </Project>
