@@ -82,15 +82,15 @@ void gc_add_root(struct gc_state* gc, void* obj)
 	gc->roots.push_back(obj);
 }
 
-void gc_register_module(struct gc_state* gc, HMODULE module)
+void gc_register_module(struct gc_state* gc, void* hModule)
 {
 	void* segmentPtr;
 	size_t segmentSize;
-	// The .bss segment may have been merged into the .data segment by the linker, and will in that case not found.
-	if (gc_find_segment(module, ".bss", &segmentPtr, &segmentSize))
+	// The .bss segment may have been merged into the .data segment by the linker, and will in that case not be found.
+	if (gc_find_segment((HMODULE)hModule, ".bss", &segmentPtr, &segmentSize))
 		gc->dataSegments.push_back({segmentPtr, (char*)segmentPtr + segmentSize});
 
-	if (gc_find_segment(module, ".data", &segmentPtr, &segmentSize))
+	if (gc_find_segment((HMODULE)hModule, ".data", &segmentPtr, &segmentSize))
 		gc->dataSegments.push_back({segmentPtr, (char*)segmentPtr + segmentSize});
 }
 

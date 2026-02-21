@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 {
     gc_state* gc = gc_create();
 
-    top_obj* obj = (top_obj*)gc_new0(gc, sizeof(top_obj));
+    top_obj* obj = gc_make<top_obj>(gc);
     //gc_add_root(gc, obj);
 
     obj->foo = (int*)gc_new0(gc, sizeof(int));
